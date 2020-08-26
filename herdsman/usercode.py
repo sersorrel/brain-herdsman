@@ -47,8 +47,9 @@ class UserCodeManager(object):
         S_KILLING: "killing"
     }
 
-    def __init__(self, logdir):
+    def __init__(self, logdir, python_interpreter):
         self.logdir = logdir
+        self.python_interpreter = os.path.abspath(python_interpreter)
         self.zone = 0
         self.mode = MODE_DEV
         self.state = UserCodeManager.S_IDLE
@@ -110,8 +111,8 @@ class UserCodeManager(object):
                                           self._log_line_cb)
 
         self.usertransport = reactor.spawnProcess(self.userproto,
-                                                  sys.executable,
-                                                  args = [ sys.executable,
+                                                  self.python_interpreter,
+                                                  args = [ self.python_interpreter,
                                                            "-m", "herdsman.loggrok",
                                                            "robot.py",
                                                            "--usbkey", self.logdir,
