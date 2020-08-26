@@ -110,10 +110,11 @@ class UserCodeManager(object):
                                           self.logfile,
                                           self._log_line_cb)
 
+        loggrok_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "loggrok.py")
         self.usertransport = reactor.spawnProcess(self.userproto,
                                                   self.python_interpreter,
                                                   args = [ self.python_interpreter,
-                                                           "-m", "herdsman.loggrok",
+                                                           loggrok_path,
                                                            "robot.py",
                                                            "--usbkey", self.logdir,
                                                            "--startfifo", self.start_fifo ],

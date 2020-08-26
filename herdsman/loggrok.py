@@ -6,6 +6,7 @@ This can be run like so:
 The result is that something.py is run after importing this module, and hence
 with the desired stdout and stderr modifications.
 """
+import os
 import sys
 
 class AddCRFlusher(object):
@@ -42,6 +43,11 @@ if __name__ == "__main__":
     prog = sys.argv[1]
     # Remove ourselves from the args
     sys.argv = sys.argv[1:]
+    # Make it look like the target file was executed as a script, even
+    # if we weren't (I'm not *entirely* sure why this is necessary, but
+    # it seems like Python only prepends $CWD to sys.path if the script
+    # was executed via `python -m xyz`, not when run as `python xyz.py`)
+    sys.path.insert(0, os.path.dirname(prog))
 
     with open(prog) as f:
         exec(f.read(), {"__file__": prog})
